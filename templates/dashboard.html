@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
-
 {% block title %}
-My Bank Account
+Banking Dashboard
 {% endblock %}
-
 
 {% block content %}
 
@@ -13,21 +11,18 @@ My Bank Account
     <div>
 
         <span class="badge">
-            SECURE ACCOUNT
+            AIOPS PROTECTED
         </span>
 
         <h1>
-            Welcome,
-            {{ user["name"] }}
+            Welcome, {{ user["name"] }}
         </h1>
 
         <p>
-            Account No:
-            {{ user["account_no"] }}
+            Account No: {{ user["account_no"] }}
         </p>
 
     </div>
-
 
     <div class="status-pill">
         🟢 Account Protected
@@ -35,6 +30,8 @@ My Bank Account
 
 </div>
 
+
+<!-- BALANCE CARDS -->
 
 <div class="grid three">
 
@@ -54,15 +51,15 @@ My Bank Account
     <div class="card">
 
         <span>
-            Account Holder
+            AI Protection
         </span>
 
         <h3>
-            {{ user["name"] }}
+            🛡 Active
         </h3>
 
         <p>
-            {{ user["email"] }}
+            AIOps + Agentic AI
         </p>
 
     </div>
@@ -71,15 +68,15 @@ My Bank Account
     <div class="card">
 
         <span>
-            AI Protection
+            Account Status
         </span>
 
         <h3>
-            Active
+            🟢 Secure
         </h3>
 
         <p>
-            AIOps + Agentic Response enabled
+            Continuous monitoring enabled
         </p>
 
     </div>
@@ -87,20 +84,64 @@ My Bank Account
 </div>
 
 
-<div class="grid two">
+<!-- BANKING OPERATIONS -->
 
+<div class="grid three">
+
+
+    <!-- DEPOSIT -->
 
     <div class="card">
 
         <h2>
-            Withdraw Amount
+            💰 Deposit Money
         </h2>
 
         <p>
-            Demo transaction for the
-            banking management module.
+            Add money to your account.
         </p>
 
+        <form
+            method="POST"
+            action="{{ url_for('deposit') }}"
+        >
+
+            <label>
+                Amount (₹)
+            </label>
+
+            <input
+                type="number"
+                name="amount"
+                min="1"
+                step="0.01"
+                placeholder="Enter amount"
+                required
+            >
+
+            <button
+                class="btn"
+                type="submit"
+            >
+                Deposit
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- WITHDRAW -->
+
+    <div class="card">
+
+        <h2>
+            💸 Withdraw Money
+        </h2>
+
+        <p>
+            Withdraw money from your account.
+        </p>
 
         <form
             method="POST"
@@ -116,6 +157,7 @@ My Bank Account
                 name="amount"
                 min="1"
                 step="0.01"
+                placeholder="Enter amount"
                 required
             >
 
@@ -131,32 +173,125 @@ My Bank Account
     </div>
 
 
+    <!-- TRANSFER -->
+
     <div class="card">
 
         <h2>
-            Security Rule
+            🔄 Money Transfer
         </h2>
 
         <p>
-
-            <b>
-                2 invalid attempts:
-            </b>
-
-            AIOps generates an alert.
-
+            Transfer money to another account.
         </p>
 
+        <form
+            method="POST"
+            action="{{ url_for('transfer') }}"
+        >
+
+            <label>
+                Receiver Account
+            </label>
+
+            <input
+                type="text"
+                name="receiver_account"
+                placeholder="Account number"
+                required
+            >
+
+            <label>
+                Amount (₹)
+            </label>
+
+            <input
+                type="number"
+                name="amount"
+                min="1"
+                step="0.01"
+                placeholder="Enter amount"
+                required
+            >
+
+            <button
+                class="btn"
+                type="submit"
+            >
+                Transfer
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- AI SECURITY -->
+
+<div class="grid two">
+
+    <div class="card">
+
+        <h2>
+            🤖 Agentic AI Response
+        </h2>
+
+        <div class="security-flow">
+
+            <div>
+                🔐 Login Activity
+            </div>
+
+            <div>
+                ↓
+            </div>
+
+            <div>
+                📊 AIOps Monitoring
+            </div>
+
+            <div>
+                ↓
+            </div>
+
+            <div>
+                🔍 Threat Detection
+            </div>
+
+            <div>
+                ↓
+            </div>
+
+            <div>
+                🤖 Agentic AI Decision
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            🛡 Security Rules
+        </h2>
 
         <p>
+            <b>1 invalid attempt:</b>
+            Activity monitored.
+        </p>
 
-            <b>
-                3+ invalid attempts:
-            </b>
+        <p>
+            <b>2 invalid attempts:</b>
+            AIOps warning generated.
+        </p>
 
-            Agentic AI temporarily
-            blocks the account.
-
+        <p>
+            <b>3+ invalid attempts:</b>
+            Agentic AI temporarily blocks account.
         </p>
 
     </div>
@@ -164,87 +299,100 @@ My Bank Account
 </div>
 
 
+<!-- TRANSACTIONS -->
+
 <div class="card">
 
-    <h2>
-        Recent Transactions
-    </h2>
+    <div class="page-head">
+
+        <div>
+
+            <h2>
+                📊 Recent Transactions
+            </h2>
+
+            <p>
+                Latest banking activity
+            </p>
+
+        </div>
+
+        <a
+            class="btn"
+            href="{{ url_for('security') }}"
+        >
+            Security Dashboard
+        </a>
+
+    </div>
 
 
-    <table>
+    <div style="overflow-x:auto;">
 
-        <tr>
+        <table>
 
-            <th>
-                ID
-            </th>
+            <tr>
 
-            <th>
-                Type
-            </th>
+                <th>ID</th>
 
-            <th>
-                Amount
-            </th>
+                <th>Type</th>
 
-            <th>
-                Description
-            </th>
+                <th>Amount</th>
 
-            <th>
-                Time
-            </th>
+                <th>Description</th>
 
-        </tr>
+                <th>Time</th>
+
+            </tr>
 
 
-        {% for t in transactions %}
+            {% for t in transactions %}
 
-        <tr>
+            <tr>
 
-            <td>
-                {{ t["id"] }}
-            </td>
+                <td>
+                    {{ t["id"] }}
+                </td>
 
-            <td>
+                <td>
 
-                <span
-                    class="tag {{ t['transaction_type']|lower }}"
-                >
+                    <span
+                        class="tag {{ t['transaction_type']|lower }}"
+                    >
+                        {{ t["transaction_type"] }}
+                    </span>
 
-                    {{ t["transaction_type"] }}
+                </td>
 
-                </span>
+                <td>
+                    ₹{{ "%.2f"|format(t["amount"]) }}
+                </td>
 
-            </td>
+                <td>
+                    {{ t["description"] }}
+                </td>
 
-            <td>
-                ₹{{ "%.2f"|format(t["amount"]) }}
-            </td>
+                <td>
+                    {{ t["created_at"] }}
+                </td>
 
-            <td>
-                {{ t["description"] }}
-            </td>
+            </tr>
 
-            <td>
-                {{ t["created_at"] }}
-            </td>
+            {% else %}
 
-        </tr>
+            <tr>
 
-        {% else %}
+                <td colspan="5">
+                    No transactions yet.
+                </td>
 
-        <tr>
+            </tr>
 
-            <td colspan="5">
-                No transactions yet.
-            </td>
+            {% endfor %}
 
-        </tr>
+        </table>
 
-        {% endfor %}
-
-    </table>
+    </div>
 
 </div>
 

@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
-
 {% block title %}
-AIOps Security Dashboard
+Security Dashboard
 {% endblock %}
-
 
 {% block content %}
 
@@ -13,26 +11,59 @@ AIOps Security Dashboard
     <div>
 
         <span class="badge">
-            AIOPS + AGENTIC AI
+            SECURITY CENTER
         </span>
 
         <h1>
-            Autonomous Security Dashboard
+            AIOps Security Dashboard
         </h1>
 
         <p>
-            Monitoring login events and
-            automated response actions.
+            Autonomous threat monitoring and response
         </p>
 
+    </div>
+
+    <div class="status-pill">
+        🛡 AI Monitoring Active
     </div>
 
 </div>
 
 
+<!-- RISK -->
+
+<div class="card risk-card">
+
+    <h2>
+        🔐 Current Risk Level
+    </h2>
+
+    <div class="risk-score">
+
+        <strong>
+            {{ risk_score }}/100
+        </strong>
+
+        <span>
+            {{ risk_level }}
+        </span>
+
+    </div>
+
+    <p>
+        Risk score is calculated from security events
+        and failed login activity.
+    </p>
+
+</div>
+
+
+<!-- STATS -->
+
 <div class="grid four">
 
-    <div class="stat">
+    <div class="card stat-card">
 
         <span>
             Total Events
@@ -45,7 +76,7 @@ AIOps Security Dashboard
     </div>
 
 
-    <div class="stat">
+    <div class="card stat-card">
 
         <span>
             Normal
@@ -58,7 +89,7 @@ AIOps Security Dashboard
     </div>
 
 
-    <div class="stat warning-stat">
+    <div class="card stat-card">
 
         <span>
             Warnings
@@ -71,7 +102,7 @@ AIOps Security Dashboard
     </div>
 
 
-    <div class="stat threat-stat">
+    <div class="card stat-card">
 
         <span>
             Threats
@@ -86,138 +117,120 @@ AIOps Security Dashboard
 </div>
 
 
+<!-- AI FLOW -->
+
 <div class="card">
 
     <h2>
-        Security Event Logs
+        🤖 Agentic AI Decision Flow
     </h2>
 
+    <div class="security-flow">
 
-    <table>
+        <div>
+            📥 Event Detected
+        </div>
 
-        <tr>
+        <div>→</div>
 
-            <th>
-                ID
-            </th>
+        <div>
+            📊 AIOps Monitoring
+        </div>
 
-            <th>
-                Account
-            </th>
+        <div>→</div>
 
-            <th>
-                Event
-            </th>
+        <div>
+            🔍 Risk Analysis
+        </div>
 
-            <th>
-                Status
-            </th>
+        <div>→</div>
 
-            <th>
-                AI Action
-            </th>
+        <div>
+            🤖 AI Decision
+        </div>
 
-            <th>
-                Time
-            </th>
+        <div>→</div>
 
-        </tr>
+        <div>
+            🛡 Response
+        </div>
 
-
-        {% for log in logs %}
-
-        <tr>
-
-            <td>
-                {{ log["id"] }}
-            </td>
-
-            <td>
-                {{ log["account_no"] }}
-            </td>
-
-            <td>
-                {{ log["event"] }}
-            </td>
-
-            <td>
-
-                <span
-                    class="tag {{ log['status']|lower }}"
-                >
-
-                    {{ log["status"] }}
-
-                </span>
-
-            </td>
-
-            <td>
-                {{ log["ai_action"] }}
-            </td>
-
-            <td>
-                {{ log["created_at"] }}
-            </td>
-
-        </tr>
-
-        {% else %}
-
-        <tr>
-
-            <td colspan="6">
-                No security events yet.
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </table>
+    </div>
 
 </div>
 
 
-<div class="grid two">
+<!-- SECURITY LOG -->
 
-    <div class="card aiops-card">
+<div class="card">
 
-        <h2>
-            📊 AIOps Role
-        </h2>
+    <h2>
+        🚨 Security Event Log
+    </h2>
 
-        <p>
+    <div style="overflow-x:auto;">
 
-            Collects login events,
-            monitors repeated failures
-            and classifies them as
+        <table>
 
-            NORMAL,
-            WARNING
-            or
-            THREAT.
+            <tr>
 
-        </p>
+                <th>ID</th>
+                <th>Account</th>
+                <th>Event</th>
+                <th>Status</th>
+                <th>AI Action</th>
+                <th>Time</th>
 
-    </div>
+            </tr>
 
 
-    <div class="card agent-card">
+            {% for log in logs %}
 
-        <h2>
-            🤖 Agentic AI Role
-        </h2>
+            <tr>
 
-        <p>
+                <td>
+                    {{ log["id"] }}
+                </td>
 
-            Uses the detected condition
-            to take an automated action.
+                <td>
+                    {{ log["account_no"] }}
+                </td>
 
-            At 3 failed attempts it
-            temporarily blocks the account.
+                <td>
+                    {{ log["event"] }}
+                </td>
 
-        </p>
+                <td>
+
+                    <span class="tag">
+                        {{ log["status"] }}
+                    </span>
+
+                </td>
+
+                <td>
+                    {{ log["ai_action"] }}
+                </td>
+
+                <td>
+                    {{ log["created_at"] }}
+                </td>
+
+            </tr>
+
+            {% else %}
+
+            <tr>
+
+                <td colspan="6">
+                    No security events.
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
 
     </div>
 
