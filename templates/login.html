@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Bank Login
+{% endblock %}
+
+
+{% block content %}
+
+<div class="auth-card">
+
+    <div class="auth-icon">
+        🔐
+    </div>
+
+
+    <h1>
+        Bank Account Login
+    </h1>
+
+
+    <p>
+        Only the genuine account holder
+        should access this account.
+    </p>
+
+
+    <form method="POST">
+
+        <label>
+            Account Number
+        </label>
+
+        <input
+            name="account_no"
+            placeholder="Enter account number"
+            required
+        >
+
+
+        <label>
+            Password
+        </label>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            required
+        >
+
+
+        <button
+            class="btn full"
+            type="submit"
+        >
+            Login Securely
+        </button>
+
+    </form>
+
+
+    <div class="security-note">
+
+        <b>
+            AI Security:
+        </b>
+
+        <ul>
+
+            <li>
+                1st invalid attempt
+                → monitoring
+            </li>
+
+            <li>
+                2nd invalid attempt
+                → AIOps alert
+            </li>
+
+            <li>
+                3rd+ invalid attempts
+                → Agentic AI temporary block
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('reset_demo') }}"
+        class="small-link"
+    >
+        Reset demo security state
+    </a>
+
+</div>
+
+{% endblock %}

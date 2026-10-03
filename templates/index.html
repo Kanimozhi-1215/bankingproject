@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}
+SecureBank AI - Home
+{% endblock %}
+
+
+{% block content %}
+
+<section class="hero">
+
+    <div>
+
+        <span class="badge">
+            
+        </span>
+
+        <h1>
+            AIOps & Agentic AI
+            <br>
+            Autonomous Threat Detection
+            & Response
+        </h1>
+
+        <p>
+
+            Banking Management System with
+            an intelligent security layer.
+
+            AIOps monitors login activity and
+            Agentic AI automatically responds
+            when suspicious activity crosses
+            the defined threshold.
+
+        </p>
+
+
+        <div class="buttons">
+
+            <a
+                class="btn"
+                href="{{ url_for('login') }}"
+            >
+                Bank Login
+            </a>
+
+            <a
+                class="btn secondary"
+                href="{{ url_for('security') }}"
+            >
+                View Security
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="shield">
+        🛡️
+    </div>
+
+</section>
+
+
+<div class="grid three">
+
+    <div class="card">
+
+        <h3>
+            👤 Banking Management
+        </h3>
+
+        <p>
+            Secure login, account balance,
+            transaction history and withdrawal.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            📊 AIOps
+        </h3>
+
+        <p>
+            Continuously monitors failed login
+            events and detects abnormal activity.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            🤖 Agentic AI
+        </h3>
+
+        <p>
+            Automatically decides and applies
+            a temporary account block after
+            repeated attacks.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card flow">
+
+    <h2>
+        How the Security Flow Works
+    </h2>
+
+
+    <div class="flow-row">
+
+        <div>
+
+            <b>1</b>
+
+            <span>
+                Login Attempt
+            </span>
+
+        </div>
+
+
+        <div class="arrow">
+            →
+        </div>
+
+
+        <div>
+
+            <b>2</b>
+
+            <span>
+                AIOps Monitor
+            </span>
+
+        </div>
+
+
+        <div class="arrow">
+            →
+        </div>
+
+
+        <div>
+
+            <b>3</b>
+
+            <span>
+                Threat Analysis
+            </span>
+
+        </div>
+
+
+        <div class="arrow">
+            →
+        </div>
+
+
+        <div>
+
+            <b>4</b>
+
+            <span>
+                Agentic Response
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <p class="rule">
+
+        <b>Rule:</b>
+
+        1st invalid = monitor,
+
+        2nd invalid = alert,
+
+        3rd or more = temporary block.
+
+    </p>
+
+</div>
+
+
+<div class="demo">
+
+    <b>
+        Demo Account:
+    </b>
+
+    Account No:
+
+    <code>
+        1002003001
+    </code>
+
+    &nbsp;
+
+    Password:
+
+    <code>
+        1234
+    </code>
+
+</div>
+
+{% endblock %}

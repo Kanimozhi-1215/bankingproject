@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+My Bank Account
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-head">
+
+    <div>
+
+        <span class="badge">
+            SECURE ACCOUNT
+        </span>
+
+        <h1>
+            Welcome,
+            {{ user["name"] }}
+        </h1>
+
+        <p>
+            Account No:
+            {{ user["account_no"] }}
+        </p>
+
+    </div>
+
+
+    <div class="status-pill">
+        🟢 Account Protected
+    </div>
+
+</div>
+
+
+<div class="grid three">
+
+    <div class="balance-card">
+
+        <span>
+            Available Balance
+        </span>
+
+        <strong>
+            ₹{{ "%.2f"|format(user["balance"]) }}
+        </strong>
+
+    </div>
+
+
+    <div class="card">
+
+        <span>
+            Account Holder
+        </span>
+
+        <h3>
+            {{ user["name"] }}
+        </h3>
+
+        <p>
+            {{ user["email"] }}
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <span>
+            AI Protection
+        </span>
+
+        <h3>
+            Active
+        </h3>
+
+        <p>
+            AIOps + Agentic Response enabled
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="grid two">
+
+
+    <div class="card">
+
+        <h2>
+            Withdraw Amount
+        </h2>
+
+        <p>
+            Demo transaction for the
+            banking management module.
+        </p>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('withdraw') }}"
+        >
+
+            <label>
+                Amount (₹)
+            </label>
+
+            <input
+                type="number"
+                name="amount"
+                min="1"
+                step="0.01"
+                required
+            >
+
+            <button
+                class="btn"
+                type="submit"
+            >
+                Withdraw
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Security Rule
+        </h2>
+
+        <p>
+
+            <b>
+                2 invalid attempts:
+            </b>
+
+            AIOps generates an alert.
+
+        </p>
+
+
+        <p>
+
+            <b>
+                3+ invalid attempts:
+            </b>
+
+            Agentic AI temporarily
+            blocks the account.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <h2>
+        Recent Transactions
+    </h2>
+
+
+    <table>
+
+        <tr>
+
+            <th>
+                ID
+            </th>
+
+            <th>
+                Type
+            </th>
+
+            <th>
+                Amount
+            </th>
+
+            <th>
+                Description
+            </th>
+
+            <th>
+                Time
+            </th>
+
+        </tr>
+
+
+        {% for t in transactions %}
+
+        <tr>
+
+            <td>
+                {{ t["id"] }}
+            </td>
+
+            <td>
+
+                <span
+                    class="tag {{ t['transaction_type']|lower }}"
+                >
+
+                    {{ t["transaction_type"] }}
+
+                </span>
+
+            </td>
+
+            <td>
+                ₹{{ "%.2f"|format(t["amount"]) }}
+            </td>
+
+            <td>
+                {{ t["description"] }}
+            </td>
+
+            <td>
+                {{ t["created_at"] }}
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+
+            <td colspan="5">
+                No transactions yet.
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+AIOps Security Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-head">
+
+    <div>
+
+        <span class="badge">
+            AIOPS + AGENTIC AI
+        </span>
+
+        <h1>
+            Autonomous Security Dashboard
+        </h1>
+
+        <p>
+            Monitoring login events and
+            automated response actions.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="grid four">
+
+    <div class="stat">
+
+        <span>
+            Total Events
+        </span>
+
+        <strong>
+            {{ stats.total }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span>
+            Normal
+        </span>
+
+        <strong>
+            {{ stats.normal }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat warning-stat">
+
+        <span>
+            Warnings
+        </span>
+
+        <strong>
+            {{ stats.warnings }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat threat-stat">
+
+        <span>
+            Threats
+        </span>
+
+        <strong>
+            {{ stats.threats }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <h2>
+        Security Event Logs
+    </h2>
+
+
+    <table>
+
+        <tr>
+
+            <th>
+                ID
+            </th>
+
+            <th>
+                Account
+            </th>
+
+            <th>
+                Event
+            </th>
+
+            <th>
+                Status
+            </th>
+
+            <th>
+                AI Action
+            </th>
+
+            <th>
+                Time
+            </th>
+
+        </tr>
+
+
+        {% for log in logs %}
+
+        <tr>
+
+            <td>
+                {{ log["id"] }}
+            </td>
+
+            <td>
+                {{ log["account_no"] }}
+            </td>
+
+            <td>
+                {{ log["event"] }}
+            </td>
+
+            <td>
+
+                <span
+                    class="tag {{ log['status']|lower }}"
+                >
+
+                    {{ log["status"] }}
+
+                </span>
+
+            </td>
+
+            <td>
+                {{ log["ai_action"] }}
+            </td>
+
+            <td>
+                {{ log["created_at"] }}
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+
+            <td colspan="6">
+                No security events yet.
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+
+<div class="grid two">
+
+    <div class="card aiops-card">
+
+        <h2>
+            📊 AIOps Role
+        </h2>
+
+        <p>
+
+            Collects login events,
+            monitors repeated failures
+            and classifies them as
+
+            NORMAL,
+            WARNING
+            or
+            THREAT.
+
+        </p>
+
+    </div>
+
+
+    <div class="card agent-card">
+
+        <h2>
+            🤖 Agentic AI Role
+        </h2>
+
+        <p>
+
+            Uses the detected condition
+            to take an automated action.
+
+            At 3 failed attempts it
+            temporarily blocks the account.
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}
