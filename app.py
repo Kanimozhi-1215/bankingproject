@@ -157,8 +157,8 @@ def init_db():
             """,
             (
                 "1002003001",
-                "Bala Kumar",
-                "bala@example.com",
+                "Kanimozhi",
+                "kanimozhi@example.com",
                 generate_password_hash("1234"),
                 50000.00
             )
@@ -183,6 +183,26 @@ def init_db():
                 50000,
                 "Initial demo balance",
                 now().isoformat()
+            )
+        )
+
+    else:
+
+        # Existing database user:
+        # automatically change old name to Kanimozhi
+
+        conn.execute(
+            """
+            UPDATE users
+            SET
+                name = ?,
+                email = ?
+            WHERE account_no = ?
+            """,
+            (
+                "Kanimozhi",
+                "kanimozhi@example.com",
+                "1002003001"
             )
         )
 
@@ -366,9 +386,7 @@ def agentic_response(
         conn.execute(
             """
             UPDATE users
-
             SET blocked_until = ?
-
             WHERE account_no = ?
             """,
             (
@@ -432,11 +450,9 @@ def get_block_status(user):
     conn.execute(
         """
         UPDATE users
-
         SET
             blocked_until = NULL,
             failed_attempts = 0
-
         WHERE account_no = ?
         """,
         (
@@ -545,9 +561,9 @@ def login():
         ).fetchone()
 
 
-        # --------------------------------------------------
+        # ==================================================
         # UNKNOWN ACCOUNT
-        # --------------------------------------------------
+        # ==================================================
 
         if not user:
 
@@ -572,9 +588,9 @@ def login():
             )
 
 
-        # --------------------------------------------------
+        # ==================================================
         # CHECK BLOCK
-        # --------------------------------------------------
+        # ==================================================
 
         blocked, blocked_until = get_block_status(
             user
@@ -618,9 +634,9 @@ def login():
             )
 
 
-        # --------------------------------------------------
+        # ==================================================
         # CORRECT PASSWORD
-        # --------------------------------------------------
+        # ==================================================
 
         if check_password_hash(
             user["password_hash"],
@@ -630,11 +646,9 @@ def login():
             conn.execute(
                 """
                 UPDATE users
-
                 SET
                     failed_attempts = 0,
                     blocked_until = NULL
-
                 WHERE account_no = ?
                 """,
                 (
@@ -652,7 +666,7 @@ def login():
                 account_no,
                 "Successful Login",
                 "NORMAL",
-                "No Action"
+                "Agentic AI: Login approved"
             )
 
 
@@ -666,9 +680,9 @@ def login():
             )
 
 
-        # --------------------------------------------------
+        # ==================================================
         # INVALID PASSWORD
-        # --------------------------------------------------
+        # ==================================================
 
         failed = (
             user["failed_attempts"]
@@ -679,9 +693,7 @@ def login():
         conn.execute(
             """
             UPDATE users
-
             SET failed_attempts = ?
-
             WHERE account_no = ?
             """,
             (
@@ -703,9 +715,9 @@ def login():
         )
 
 
-        # --------------------------------------------------
-        # 3RD ATTEMPT
-        # --------------------------------------------------
+        # ==================================================
+        # AGENTIC AI DECISION
+        # ==================================================
 
         if failed >= 3:
 
@@ -724,10 +736,6 @@ def login():
             )
 
 
-        # --------------------------------------------------
-        # 2ND ATTEMPT
-        # --------------------------------------------------
-
         elif failed == 2:
 
             action = (
@@ -735,10 +743,6 @@ def login():
                 "user warning generated"
             )
 
-
-        # --------------------------------------------------
-        # 1ST ATTEMPT
-        # --------------------------------------------------
 
         else:
 
@@ -753,9 +757,9 @@ def login():
         )
 
 
-        # --------------------------------------------------
+        # ==================================================
         # USER MESSAGE
-        # --------------------------------------------------
+        # ==================================================
 
         if failed == 1:
 
@@ -811,7 +815,7 @@ def logout():
             account_no,
             "Logout",
             "NORMAL",
-            "No Action"
+            "Agentic AI: Session ended"
         )
 
 
@@ -853,11 +857,8 @@ def dashboard():
         """
         SELECT *
         FROM transactions
-
         WHERE account_no = ?
-
         ORDER BY id DESC
-
         LIMIT 10
         """,
         (
@@ -899,7 +900,6 @@ def withdraw():
             )
         )
 
-
     except ValueError:
 
         amount = 0
@@ -911,7 +911,6 @@ def withdraw():
             "Enter a valid withdrawal amount.",
             "danger"
         )
-
 
         return redirect(
             url_for("dashboard")
@@ -947,9 +946,9 @@ def withdraw():
         )
 
 
-    # --------------------------------------------------
+    # ==================================================
     # INSUFFICIENT BALANCE
-    # --------------------------------------------------
+    # ==================================================
 
     if amount > user["balance"]:
 
@@ -984,9 +983,7 @@ def withdraw():
     conn.execute(
         """
         UPDATE users
-
         SET balance = ?
-
         WHERE account_no = ?
         """,
         (
@@ -1027,7 +1024,7 @@ def withdraw():
         account_no,
         f"Withdrawal ₹{amount:.2f}",
         "NORMAL",
-        "Transaction allowed"
+        "Agentic AI: Transaction allowed"
     )
 
 
@@ -1065,7 +1062,6 @@ def deposit():
             )
         )
 
-
     except ValueError:
 
         amount = 0
@@ -1077,7 +1073,6 @@ def deposit():
             "Enter a valid deposit amount.",
             "danger"
         )
-
 
         return redirect(
             url_for("dashboard")
@@ -1103,12 +1098,10 @@ def deposit():
 
         conn.close()
 
-
         flash(
             "Account not found.",
             "danger"
         )
-
 
         return redirect(
             url_for("dashboard")
@@ -1124,9 +1117,7 @@ def deposit():
     conn.execute(
         """
         UPDATE users
-
         SET balance = ?
-
         WHERE account_no = ?
         """,
         (
@@ -1167,7 +1158,7 @@ def deposit():
         account_no,
         f"Deposit ₹{amount:.2f}",
         "NORMAL",
-        "Transaction allowed"
+        "Agentic AI: Transaction allowed"
     )
 
 
@@ -1193,9 +1184,7 @@ def deposit():
 @login_required
 def transfer():
 
-    sender_account = session[
-        "account_no"
-    ]
+    sender_account = session["account_no"]
 
 
     receiver_account = request.form.get(
@@ -1213,15 +1202,14 @@ def transfer():
             )
         )
 
-
     except ValueError:
 
         amount = 0
 
 
-    # --------------------------------------------------
+    # ==================================================
     # VALIDATION
-    # --------------------------------------------------
+    # ==================================================
 
     if not receiver_account:
 
@@ -1229,7 +1217,6 @@ def transfer():
             "Enter receiver account number.",
             "danger"
         )
-
 
         return redirect(
             url_for("dashboard")
@@ -1243,7 +1230,6 @@ def transfer():
             "danger"
         )
 
-
         return redirect(
             url_for("dashboard")
         )
@@ -1256,7 +1242,6 @@ def transfer():
             "danger"
         )
 
-
         return redirect(
             url_for("dashboard")
         )
@@ -1265,9 +1250,9 @@ def transfer():
     conn = get_db()
 
 
-    # --------------------------------------------------
+    # ==================================================
     # GET SENDER
-    # --------------------------------------------------
+    # ==================================================
 
     sender = conn.execute(
         """
@@ -1281,9 +1266,9 @@ def transfer():
     ).fetchone()
 
 
-    # --------------------------------------------------
+    # ==================================================
     # GET RECEIVER
-    # --------------------------------------------------
+    # ==================================================
 
     receiver = conn.execute(
         """
@@ -1297,9 +1282,9 @@ def transfer():
     ).fetchone()
 
 
-    # --------------------------------------------------
+    # ==================================================
     # RECEIVER NOT FOUND
-    # --------------------------------------------------
+    # ==================================================
 
     if not receiver:
 
@@ -1325,9 +1310,9 @@ def transfer():
         )
 
 
-    # --------------------------------------------------
+    # ==================================================
     # INSUFFICIENT BALANCE
-    # --------------------------------------------------
+    # ==================================================
 
     if amount > sender["balance"]:
 
@@ -1353,9 +1338,9 @@ def transfer():
         )
 
 
-    # --------------------------------------------------
-    # CALCULATE BALANCES
-    # --------------------------------------------------
+    # ==================================================
+    # UPDATE BALANCES
+    # ==================================================
 
     sender_balance = (
         sender["balance"]
@@ -1369,16 +1354,10 @@ def transfer():
     )
 
 
-    # --------------------------------------------------
-    # UPDATE SENDER
-    # --------------------------------------------------
-
     conn.execute(
         """
         UPDATE users
-
         SET balance = ?
-
         WHERE account_no = ?
         """,
         (
@@ -1388,16 +1367,10 @@ def transfer():
     )
 
 
-    # --------------------------------------------------
-    # UPDATE RECEIVER
-    # --------------------------------------------------
-
     conn.execute(
         """
         UPDATE users
-
         SET balance = ?
-
         WHERE account_no = ?
         """,
         (
@@ -1407,9 +1380,9 @@ def transfer():
     )
 
 
-    # --------------------------------------------------
+    # ==================================================
     # SENDER TRANSACTION
-    # --------------------------------------------------
+    # ==================================================
 
     conn.execute(
         """
@@ -1433,9 +1406,9 @@ def transfer():
     )
 
 
-    # --------------------------------------------------
+    # ==================================================
     # RECEIVER TRANSACTION
-    # --------------------------------------------------
+    # ==================================================
 
     conn.execute(
         """
@@ -1517,11 +1490,8 @@ def calculate_risk(account_no):
     threats = conn.execute(
         """
         SELECT COUNT(*) AS c
-
         FROM security_logs
-
         WHERE account_no = ?
-
         AND status = 'THREAT'
         """,
         (
@@ -1533,11 +1503,8 @@ def calculate_risk(account_no):
     warnings = conn.execute(
         """
         SELECT COUNT(*) AS c
-
         FROM security_logs
-
         WHERE account_no = ?
-
         AND status = 'WARNING'
         """,
         (
@@ -1549,7 +1516,9 @@ def calculate_risk(account_no):
     conn.close()
 
 
-    # Risk calculation
+    # ==================================================
+    # RISK FORMULA
+    # ==================================================
 
     score = (
         failed * 20
@@ -1590,28 +1559,22 @@ def calculate_risk(account_no):
 @login_required
 def security():
 
-    account_no = session[
-        "account_no"
-    ]
+    account_no = session["account_no"]
 
 
     conn = get_db()
 
 
-    # --------------------------------------------------
+    # ==================================================
     # SECURITY LOGS
-    # --------------------------------------------------
+    # ==================================================
 
     logs = conn.execute(
         """
         SELECT *
-
         FROM security_logs
-
         WHERE account_no = ?
-
         ORDER BY id DESC
-
         LIMIT 30
         """,
         (
@@ -1620,86 +1583,80 @@ def security():
     ).fetchall()
 
 
-    # --------------------------------------------------
-    # STATISTICS
-    # --------------------------------------------------
+    # ==================================================
+    # SECURITY STATISTICS
+    # ==================================================
 
-    stats = {
-
-        "total":
-        conn.execute(
-            """
-            SELECT COUNT(*) c
-
-            FROM security_logs
-
-            WHERE account_no = ?
-            """,
-            (
-                account_no,
-            )
-        ).fetchone()["c"],
+    total = conn.execute(
+        """
+        SELECT COUNT(*) AS c
+        FROM security_logs
+        WHERE account_no = ?
+        """,
+        (
+            account_no,
+        )
+    ).fetchone()["c"]
 
 
-        "warnings":
-        conn.execute(
-            """
-            SELECT COUNT(*) c
-
-            FROM security_logs
-
-            WHERE account_no = ?
-
-            AND status = 'WARNING'
-            """,
-            (
-                account_no,
-            )
-        ).fetchone()["c"],
+    warnings = conn.execute(
+        """
+        SELECT COUNT(*) AS c
+        FROM security_logs
+        WHERE account_no = ?
+        AND status = 'WARNING'
+        """,
+        (
+            account_no,
+        )
+    ).fetchone()["c"]
 
 
-        "threats":
-        conn.execute(
-            """
-            SELECT COUNT(*) c
-
-            FROM security_logs
-
-            WHERE account_no = ?
-
-            AND status = 'THREAT'
-            """,
-            (
-                account_no,
-            )
-        ).fetchone()["c"],
+    threats = conn.execute(
+        """
+        SELECT COUNT(*) AS c
+        FROM security_logs
+        WHERE account_no = ?
+        AND status = 'THREAT'
+        """,
+        (
+            account_no,
+        )
+    ).fetchone()["c"]
 
 
-        "normal":
-        conn.execute(
-            """
-            SELECT COUNT(*) c
-
-            FROM security_logs
-
-            WHERE account_no = ?
-
-            AND status = 'NORMAL'
-            """,
-            (
-                account_no,
-            )
-        ).fetchone()["c"]
-
-    }
+    normal = conn.execute(
+        """
+        SELECT COUNT(*) AS c
+        FROM security_logs
+        WHERE account_no = ?
+        AND status = 'NORMAL'
+        """,
+        (
+            account_no,
+        )
+    ).fetchone()["c"]
 
 
     conn.close()
 
 
-    # --------------------------------------------------
-    # RISK
-    # --------------------------------------------------
+    stats = {
+
+        "total": total,
+
+        "warnings": warnings,
+
+        "threats": threats,
+
+        "normal": normal
+
+    }
+
+
+    # ==================================================
+    # RISK SCORE
+    # ==================================================
 
     risk_score, risk_level = calculate_risk(
         account_no
@@ -1729,18 +1686,36 @@ def reset_demo():
     conn = get_db()
 
 
+    # Reset security state
+
     conn.execute(
         """
         UPDATE users
-
         SET
             failed_attempts = 0,
             blocked_until = NULL
-
         WHERE account_no = ?
         """,
         (
             "1002003001",
+        )
+    )
+
+
+    # Reset name also
+
+    conn.execute(
+        """
+        UPDATE users
+        SET
+            name = ?,
+            email = ?
+        WHERE account_no = ?
+        """,
+        (
+            "Kanimozhi",
+            "kanimozhi@example.com",
+            "1002003001"
         )
     )
 
@@ -1762,12 +1737,20 @@ def reset_demo():
 
 
 # ==================================================
+# INITIALIZE DATABASE
+# ==================================================
+
+# Important for Render / Gunicorn also.
+# Database will be created when application starts.
+
+init_db()
+
+
+# ==================================================
 # RUN APPLICATION
 # ==================================================
 
 if __name__ == "__main__":
-
-    init_db()
 
     app.run(
         debug=True
