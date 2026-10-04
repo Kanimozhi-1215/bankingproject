@@ -34,7 +34,6 @@ app.secret_key = "mca-banking-aiops-project"
 
 DB = "banking.db"
 
-# Account block duration
 BLOCK_MINUTES = 5
 
 
@@ -186,10 +185,12 @@ def init_db():
             )
         )
 
+
     else:
 
-        # Existing database user:
-        # automatically change old name to Kanimozhi
+        # IMPORTANT:
+        # Update old Render database record
+        # from Bala Kumar to Kanimozhi.
 
         conn.execute(
             """
@@ -474,6 +475,7 @@ def get_block_status(user):
 def login_required(function):
 
     @wraps(function)
+
     def wrapper(*args, **kwargs):
 
         if "account_no" not in session:
@@ -1207,10 +1209,6 @@ def transfer():
         amount = 0
 
 
-    # ==================================================
-    # VALIDATION
-    # ==================================================
-
     if not receiver_account:
 
         flash(
@@ -1250,10 +1248,6 @@ def transfer():
     conn = get_db()
 
 
-    # ==================================================
-    # GET SENDER
-    # ==================================================
-
     sender = conn.execute(
         """
         SELECT *
@@ -1266,10 +1260,6 @@ def transfer():
     ).fetchone()
 
 
-    # ==================================================
-    # GET RECEIVER
-    # ==================================================
-
     receiver = conn.execute(
         """
         SELECT *
@@ -1281,10 +1271,6 @@ def transfer():
         )
     ).fetchone()
 
-
-    # ==================================================
-    # RECEIVER NOT FOUND
-    # ==================================================
 
     if not receiver:
 
@@ -1310,10 +1296,6 @@ def transfer():
         )
 
 
-    # ==================================================
-    # INSUFFICIENT BALANCE
-    # ==================================================
-
     if amount > sender["balance"]:
 
         conn.close()
@@ -1337,10 +1319,6 @@ def transfer():
             url_for("dashboard")
         )
 
-
-    # ==================================================
-    # UPDATE BALANCES
-    # ==================================================
 
     sender_balance = (
         sender["balance"]
@@ -1380,10 +1358,6 @@ def transfer():
     )
 
 
-    # ==================================================
-    # SENDER TRANSACTION
-    # ==================================================
-
     conn.execute(
         """
         INSERT INTO transactions
@@ -1405,10 +1379,6 @@ def transfer():
         )
     )
 
-
-    # ==================================================
-    # RECEIVER TRANSACTION
-    # ==================================================
 
     conn.execute(
         """
@@ -1516,10 +1486,6 @@ def calculate_risk(account_no):
     conn.close()
 
 
-    # ==================================================
-    # RISK FORMULA
-    # ==================================================
-
     score = (
         failed * 20
         + threats * 10
@@ -1537,11 +1503,9 @@ def calculate_risk(account_no):
 
         level = "HIGH"
 
-
     elif score >= 30:
 
         level = "MEDIUM"
-
 
     else:
 
@@ -1565,10 +1529,6 @@ def security():
     conn = get_db()
 
 
-    # ==================================================
-    # SECURITY LOGS
-    # ==================================================
-
     logs = conn.execute(
         """
         SELECT *
@@ -1582,10 +1542,6 @@ def security():
         )
     ).fetchall()
 
-
-    # ==================================================
-    # SECURITY STATISTICS
-    # ==================================================
 
     total = conn.execute(
         """
@@ -1654,10 +1610,6 @@ def security():
     }
 
 
-    # ==================================================
-    # RISK SCORE
-    # ==================================================
-
     risk_score, risk_level = calculate_risk(
         account_no
     )
@@ -1686,28 +1638,12 @@ def reset_demo():
     conn = get_db()
 
 
-    # Reset security state
-
     conn.execute(
         """
         UPDATE users
         SET
             failed_attempts = 0,
-            blocked_until = NULL
-        WHERE account_no = ?
-        """,
-        (
-            "1002003001",
-        )
-    )
-
-
-    # Reset name also
-
-    conn.execute(
-        """
-        UPDATE users
-        SET
+            blocked_until = NULL,
             name = ?,
             email = ?
         WHERE account_no = ?
@@ -1726,7 +1662,7 @@ def reset_demo():
 
 
     flash(
-        "Demo account security state reset.",
+        "Demo account updated successfully.",
         "success"
     )
 
@@ -1739,9 +1675,6 @@ def reset_demo():
 # ==================================================
 # INITIALIZE DATABASE
 # ==================================================
-
-# Important for Render / Gunicorn also.
-# Database will be created when application starts.
 
 init_db()
 
